@@ -33,13 +33,28 @@ public class Bishop extends Piece {
 	@Override
 	public List<Coordinate> getPath(Tile start, Tile end) {
 
-		int d = Math.abs(start.getPosition().getX() - end.getPosition().getX()) + 1;
+		if (!isLegal(start, end))
+			return null;
+
 		List<Coordinate> output = new ArrayList<>();
-		int startX = Math.min(start.getPosition().getX(), end.getPosition().getX());
+		int startX = start.getX(), endX = end.getX();
+		int startY = start.getY(), endY = end.getY();
+		double radCoeff = Math.toRadians((startY - endY) / (startX - endX));
 
-		for (int x = startX; x < d; x++)
-			output.add(new Coordinate(x, x));
+		int m = (int) Math.round(Math.tan(radCoeff));
+		int dir = (int) Math.round(Math.cos(radCoeff));
 
+		if (dir > 0)
+			for (int x = startX; x < endX; x++) {
+				int y = x - startX + startY; // y - y0 = 1 * (x - x0)
+				output.add(new Coordinate(x, y));
+			}
+		else if (dir < 0)
+			for (int x = startX; x > endX; x--) {
+				int y = -(x - startX) + startY; // y - y0 = -1 * (x - x0)
+				System.out.println(x + ", " + y);
+				output.add(new Coordinate(x, y));
+			}
 		return output;
 	}
 

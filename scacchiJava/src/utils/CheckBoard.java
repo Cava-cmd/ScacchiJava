@@ -63,7 +63,7 @@ public class CheckBoard {
 	 * @return true se la mossa è valida, false in caso contrario
 	 * @throws Exception se la mossa è scacco matto
 	 */
-	public boolean makeMove(Tile start, Tile end) throws Exception {
+	public boolean makeMove(Tile start, Tile end) {
 		if (!start.getPiece().isLegal(start, end))
 			return false;
 
@@ -74,36 +74,7 @@ public class CheckBoard {
 
 		board[end.getX()][end.getY()] = start;
 		board[start.getX()][start.getY()] = new Tile(start.getX(), start.getY(), null);
-		findCheckmate();
 		return true;
-	}
-	//TODO optimize
-	private void findCheckmate() throws Exception {
-		int legalMoves = 8;
-		for (Tile[] tiles : board)
-			for (Tile tile : tiles) {
-				Piece piece = tile.getPiece();
-				if (piece.equals(PieceType.KING)) {
-
-					for (int x = tile.getX() - 1; x < tile.getX() + 1; x++)
-						for (int y = tile.getY() - 1; y < tile.getY() + 1; y++) {
-							if (!(x == tile.getX() && y == tile.getY()))// evita ridondanza
-								try {
-
-									if (!piece.isLegal(tile, board[x][y]))
-										legalMoves--;
-
-								} catch (ArrayIndexOutOfBoundsException e) {
-								} // ignora gli errori di indice non valido
-							
-						}
-
-				}
-				
-			}
-		
-		if(legalMoves <= 0) throw new Exception("Checkmate");
-		
 	}
 
 }
