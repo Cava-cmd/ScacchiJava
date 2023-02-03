@@ -9,10 +9,11 @@ public class CheckBoard {
 
 	Tile[][] board = new Tile[8][8];
 	Vector<Piece> captures = new Vector<>();
-	// TODO implement moves log
+	PlayerType toMove;
 
 	public CheckBoard() {
 		reset();
+		toMove = PlayerType.WHITE;
 	}
 
 	/**
@@ -20,9 +21,9 @@ public class CheckBoard {
 	 */
 	public void reset() {
 
-		for (Tile[] tiles : board)
-			for (Tile tile : tiles)
-				tile.setPiece(null);
+		for (int x = 0; x < 8; x++)
+			for (int y = 0; y < 8; y++)
+				board[x][y] = new Tile(x, y, new NullPiece());
 
 		board[0][0] = new Tile(0, 0, new Rook(PlayerType.WHITE));
 		board[7][0] = new Tile(7, 0, new Rook(PlayerType.WHITE));
@@ -57,23 +58,43 @@ public class CheckBoard {
 		return board;
 	}
 
+	public Tile getTile(int x, int y) {
+		return board[x][y];
+	}
+
 	/**
 	 * metodo che gestisce la registrazione della mossa
 	 * 
 	 * @return true se la mossa è valida, false in caso contrario
-	 * @throws Exception se la mossa è scacco matto
+	 * @throws Exception - la partita è terminata per cattura del re
 	 */
-	public boolean makeMove(Tile start, Tile end) {
+	public boolean makeMove(Tile start, Tile end) throws Exception {
+		
+		if(start.getPiece().getPlayer() != toMove)
+			return false;
+		
 		if (!start.getPiece().isLegal(start, end))
 			return false;
 
-		if (end.getPiece() != null) {
+		if (!(end.getPiece() instanceof NullPiece)) {
 			captures.add(end.getPiece());
-			end.setPiece(null);
+			
+			if(end.getPiece().getType() == PieceType.KING) 
+				throw new Exception("game ended");
+			
 		}
 
-		board[end.getX()][end.getY()] = start;
-		board[start.getX()][start.getY()] = new Tile(start.getX(), start.getY(), null);
+		board[end.getX()][end.getY()].setPiece(start.getPiece());
+		board[start.getX()][start.getY()].setPiece(new NullPiece());
+		switch(toMove) {
+		case BLACK:
+			toMove = PlayerType.WHITE;
+			break;
+		case WHITE:
+			toMove = PlayerType.BLACK;
+			break;
+		
+		}
 		return true;
 	}
 

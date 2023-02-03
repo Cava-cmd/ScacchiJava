@@ -12,12 +12,15 @@ import utils.Tile;
 public class King extends Piece {
 
 	public King(PlayerType player) {
-		super(PieceType.ROOK, player);
+		super(PieceType.KING, player);
 	}
 
 	@Override
 	public boolean isLegal(Tile start, Tile end) {
-
+		
+		if(end.getPiece().getPlayer() == start.getPiece().getPlayer())
+			return false;
+		
 		int difference = Math.abs(start.getPosition().getX() - end.getPosition().getX())
 				+ Math.abs(start.getPosition().getY() - end.getPosition().getY());
 		

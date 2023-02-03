@@ -10,7 +10,8 @@ import utils.Piece;
 import utils.Tile;
 
 public class Pawn extends Piece {
-
+	// TODO fix en-passant
+	// TODO implementare promozione
 	public Pawn(PlayerType player) {
 		super(PieceType.PAWN, player);
 	}
@@ -18,22 +19,40 @@ public class Pawn extends Piece {
 	@Override
 	public boolean isLegal(Tile start, Tile end) {
 
-		if (start.getPosition().equals(end.getPosition()))
+		if (end.getPiece().getPlayer() == getPlayer())
 			return false;
 
-		if (Math.abs(start.getPosition().getX() - end.getPosition().getX()) == 2)
-			// first pawn move
-			switch (super.getPlayer()) {
-			case BLACK:
-				if (start.getPosition().getX() != 6)
-					return false;
-			case WHITE:
-				if (start.getPosition().getX() != 1)
-					return false;
-			}
+		if (start.getPosition().equals(end.getPosition()))
+			return false;
+		
+		//controlla se la mossa è nella direzione corretta
+		switch (getPlayer()) {
+		case BLACK:
+			if (start.getY() < end.getY())
+				return false;
+			break;
+		case WHITE:
+			if (start.getY() > end.getY())
+				return false;
+			break;
 
-		if (Math.abs(start.getPosition().getX() - end.getPosition().getX()) == 1)
-			;
+		}
+		//controlla se la mossa successiva è una cattura
+		if (start.getX() != end.getX() && end.getPiece() instanceof NullPiece)
+			return false;
+		
+		//controlla se è la prima mossa
+		int dist = Math.abs(start.getY() - end.getY());
+		if(dist > 2)
+			return false;
+		
+		if(dist == 2) {
+			if(getPlayer() == PlayerType.WHITE && start.getY() != 1)
+				return false;
+			else if(getPlayer() == PlayerType.BLACK && start.getY() != 6)
+				return false;
+		}
+
 		return true;
 	}
 

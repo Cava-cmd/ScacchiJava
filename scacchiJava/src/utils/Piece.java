@@ -37,11 +37,6 @@ public abstract class Piece {
 	public abstract List<Coordinate> getPath(Tile start, Tile end);
 	
 	@Override
-	public String toString() {
-		return type.value;
-	}
-	
-	@Override
 	public boolean equals(Object obj) {
 		
 		if(!(obj instanceof Piece || obj instanceof PieceType))
@@ -54,6 +49,11 @@ public abstract class Piece {
 		
 		return true;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return type.value;
 	}
 
 }

@@ -17,7 +17,10 @@ public class Knight extends Piece {
 
 	@Override
 	public boolean isLegal(Tile start, Tile end) {
-
+		
+		if(end.getPiece().getPlayer() == getPlayer())
+			return false;
+		
 		int startCoordinate = 8 * start.getPosition().getY() + start.getPosition().getX();
 		int endCoordinate = 8 * end.getPosition().getY() + end.getPosition().getX();
 		int difference = Math.abs(endCoordinate - startCoordinate);

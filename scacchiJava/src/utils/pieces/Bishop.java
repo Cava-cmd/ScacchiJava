@@ -18,6 +18,9 @@ public class Bishop extends Piece {
 	@Override
 	public boolean isLegal(Tile start, Tile end) {
 
+		if(end.getPiece().getPlayer() == getPlayer())
+			return false;
+		
 		if (start.getPosition().equals(end.getPosition()))
 			return false;
 

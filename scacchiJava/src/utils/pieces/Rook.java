@@ -17,7 +17,10 @@ public class Rook extends Piece {
 	
 	@Override
 	public boolean isLegal(Tile start, Tile end) {
-
+		
+		if(end.getPiece().getPlayer() == start.getPiece().getPlayer())
+			return false;
+		
 		if (start.getPosition().getX() == end.getPosition().getX()
 				^ start.getPosition().getY() == end.getPosition().getY())
 			return true;

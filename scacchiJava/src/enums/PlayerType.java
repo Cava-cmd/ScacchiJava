@@ -2,12 +2,8 @@ package enums;
 
 public enum PlayerType {
 	
-	WHITE("_white"),
-	BLACK("_black");
+	WHITE,
+	BLACK, 
+	NULL;
 
-	public String value;
-	PlayerType(String value) {
-		this.value = value;
-	}
-	
 }
